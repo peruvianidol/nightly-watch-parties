@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nightly Watch Parties</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Merriweather:wght@900&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --top-border-color: #ffd54f;
+        --top-border-width: 8px;
+        --amazon-button: #0f79af;
+        --amazon-hover: #1399de;
+        --netflix-button: #e50914;
+        --netflix-hover: #f40612;
+        --shadow: 3px 3px 3px black;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        min-height: 100vh;
+      }
+
+      body {
+        font-family: "Lato", sans-serif;
+        color: white;
+        background-image: url("theater.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+        margin: 0;
+      }
+
+      header {
+        padding: 2rem 1rem;
+      }
+
+      main {
+        box-shadow: inset 0 var(--top-border-width) 0 var(--top-border-color);
+        display: grid;
+        min-height: 100vh;
+        grid-template-rows: min-content auto auto;
+        background-color: rgba(0, 0, 0, .5);
+        text-shadow: var(--shadow);
+      }
+
+      section {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        place-self: center;
+        padding: 0 1rem;
+      }
+
+      div {
+        text-align: center;
+        place-self: start center;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        line-height: 1;
+        margin: 0;
+      }
+
+      h2 {
+        font-family: "Merriweather", sans-serif;
+        font-size: 2.75rem;
+        margin : 0;
+      }
+
+      time {
+        font-size: 1.125rem;
+        line-height: 1.5;
+        margin-bottom: 2rem;
+      }
+
+      .button {
+        display: inline-block;
+        cursor: pointer;
+        border: 0;
+        color: white;
+        font-size: 1.25rem;
+        padding: .75rem 1.5rem;
+        box-shadow: 4px 4px 0 black;
+        border-radius: 4px;
+        text-shadow: none;
+        line-height: 1;
+        text-decoration: none;
+      }
+
+      a:not([class]) {
+        color: inherit;
+      }
+
+      .amazon a {
+        background-color: var(--amazon-button);
+      }
+      .amazon a:hover {
+        background-color: var(--amazon-hover);
+      }
+
+      .netflix .button {
+        background-color: var(--netflix-button);
+      }
+      .netflix .button:hover {
+        background-color: var(--netflix-hover);
+      }
+
+      .is-hidden {
+        display: none;
+      }
+
+      @media (min-width: 600px) {
+        h2 {
+          font-size: 5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <main>
+
+      <header>
+        <h1>Nightly Watch Parties</h1>
+      </header>
+      
+      <section>
+        <time><span id="date"></span><br>
+          <span id="time"></span> Pacific</time>
+        <h2 id="title"></h2>
+      </section> 
+
+      <div class="amazon">
+        <a href="" class="button">Join Amazon Watch Party</a>
+        
+        <p>* Must be in the US and an Amazon Prime subscriber
+      </div>
+
+      <div class="netflix">
+        <a href="" class="button">Join Netflix Party</a>
+        
+        <p>* Requires <a href="https://www.netflixparty.com/">Netflix Party</a> Chrome extension
+      </div>
+
+    </main>
+
+<script>
+  fetch('party.json')
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      appendData(data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+    function appendData(data) {
+      const dateContainer = document.getElementById("date");
+      const timeContainer = document.getElementById("time");
+      const titleContainer = document.getElementById("title");
+      const amazon = document.querySelector(".amazon");
+      const netflix = document.querySelector(".netflix");
+      const amazonLink = document.querySelector(".amazon .button");
+      const netflixLink = document.querySelector(".netflix .button");
+      dateContainer.innerHTML = data.date;
+      timeContainer.innerHTML = data.time;
+      titleContainer.innerHTML = data.title;
+
+      if (data.platform === "amazon") {
+        netflix.classList.add("is-hidden");
+        amazon.classList.remove("is-hidden");
+        amazonLink.setAttribute("href", data.url);
+      } else {
+        amazon.classList.add("is-hidden");
+        netflix.classList.remove("is-hidden");
+        netflixLink.setAttribute("href", data.url);
+      }
+    }
+</script>
+
+  </body>
+</html>
